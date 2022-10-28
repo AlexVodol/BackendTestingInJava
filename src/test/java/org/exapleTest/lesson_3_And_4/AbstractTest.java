@@ -1,4 +1,4 @@
-package org.exapleTest.lesson_3;
+package org.exapleTest.lesson_3_And_4;
 
 import org.junit.jupiter.api.BeforeAll;
 
@@ -12,6 +12,9 @@ public class AbstractTest {
     private static InputStream configFile;
     private static String apiKey;
     private static String baseUrl;
+    private static String ShoppingUrl;
+    private static String baseHash;
+    private static String bodyShopping;
 
     @BeforeAll
     static void initTest() throws IOException {
@@ -20,6 +23,8 @@ public class AbstractTest {
 
         apiKey =  prop.getProperty("apiKey");
         baseUrl= prop.getProperty("base_url");
+        ShoppingUrl = prop.getProperty("ShoppingList_url");
+        baseHash = prop.getProperty("hash");
     }
 
     public static String getApiKey() {
@@ -29,5 +34,15 @@ public class AbstractTest {
     public static String getBaseUrl() {
         return baseUrl;
     }
+
+    public static String baseShoppingUrl(){
+        return ShoppingUrl;
+    }
+
+    public static String getBaseHash(){
+        return baseHash;
+    }
+
+
 }
 

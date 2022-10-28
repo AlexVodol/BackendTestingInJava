@@ -1,4 +1,4 @@
-package org.exapleTest.lesson_3;
+package org.exapleTest.lesson_3_And_4;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +16,7 @@ public class SpoonacularSearchTest extends AbstractTest {
     }
 
     @BeforeEach
-    void separation(){
+    void separation() {
         System.out.println("$-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-$");
     }
 
@@ -47,7 +47,7 @@ public class SpoonacularSearchTest extends AbstractTest {
     }
 
     @Test
-    void getQueryTest(){
+    void getQueryTest() {
         given()
                 .queryParam("apiKey", getApiKey())
                 .queryParam("query", "borsch")
@@ -59,9 +59,9 @@ public class SpoonacularSearchTest extends AbstractTest {
     }
 
     @Test
-    void getIncludeIngredientsTest(){
+    void getIncludeIngredientsTest() {
         given()
-                .queryParam("apiKey",getApiKey())
+                .queryParam("apiKey", getApiKey())
                 .queryParam("includeIngredients", "turmeric,tomato")
                 .when()
                 .get(getBaseUrl())
@@ -71,9 +71,9 @@ public class SpoonacularSearchTest extends AbstractTest {
     }
 
     @Test
-    void getSearchPastaTest(){
+    void getSearchPastaTest() {
         given()
-                .queryParam("apiKey",getApiKey())
+                .queryParam("apiKey", getApiKey())
                 .queryParam("query", "pasta")
                 .queryParam("maxFat", "25")
                 .queryParam("number", "2")
@@ -84,4 +84,46 @@ public class SpoonacularSearchTest extends AbstractTest {
                 .statusCode(200);
     }
 
+    @Test
+    void postShoppingList() {
+        String id = given()
+                .queryParam("apiKey", getApiKey())
+                .queryParam("hash", getBaseHash())
+                .pathParams("username", "alexv0")
+                .body("{\n"
+                        + " \"item\": \"1 package baking powder\",\n"
+                        + " \"aisle\": \"Baking\",\n"
+                        + " \"parse\": true\n"
+                        + "}")
+                .when()
+                .post(baseShoppingUrl() + "items")
+                .prettyPeek()
+                .then()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .get("id")
+                .toString();
+
+        given()
+                .queryParam("apiKey", getApiKey())
+                .queryParam("hash", getBaseHash())
+                .pathParams("username", "alexv0")
+                .delete(baseShoppingUrl()+"items/" + id)
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void getShoppingList() {
+        given()
+                .queryParam("apiKey", getApiKey())
+                .queryParam("hash", getBaseHash())
+                .pathParams("username", "alexv0")
+                .when()
+                .get(baseShoppingUrl())
+                .prettyPeek()
+                .then()
+                .statusCode(200);
+    }
 }
